@@ -8,7 +8,7 @@ function App() {
           <Header/>
           <Dashboard/>
           <div>
-            
+            <h1>Hello</h1>
           </div>
     </div>
   )
