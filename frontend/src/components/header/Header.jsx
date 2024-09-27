@@ -5,7 +5,7 @@ const Header = () => {
     <div>
         <header className="bg-[#D8C3A5] rounded-xl ">
   <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-    <div className="flex h-16 items-center flex justify-between  ">
+    <div className="flex h-16 items-center  justify-between  ">
       <div className="md:flex md:items-center md:gap-12">
         <a className="flex justify-start" href="#" >
             <img src={logo} alt="logo" className="h-10 w-50 flex " />
@@ -16,10 +16,16 @@ const Header = () => {
       <div className="hidden md:block">
         <nav aria-label="Global">
           <ul className="flex items-center gap-6 text-sm">
-
-            <li>
-              <a className="text-black hover:underline hover:underline-offset-8  font-semibold text-lg  transition hover:decoration-[red] " href="#"> Home </a>
+            <NavLink to="/dashboard">
+            <li className="text-black hover:underline hover:underline-offset-8  font-semibold text-lg  transition hover:decoration-[red]" >
+               DashBoard 
             </li>
+            </NavLink>
+            <NavLink to="/add-recipe">
+            <li className="text-black hover:underline hover:underline-offset-8  font-semibold text-lg  transition hover:decoration-[red]" >
+               Add-Recipe 
+            </li>
+            </NavLink>
 
             {/* <li>
               <a className="text-black font-semibold text-lg    hover:underline hover:underline-offset-8  transition hover:decoration-[red] " href="#"> Add Recepie </a>
@@ -32,6 +38,7 @@ const Header = () => {
 
       <div className="flex items-center gap-4">
         <div className="sm:flex sm:gap-4">
+
           <a
             className="rounded-md bg-[#E85A4F] transition hover:bg-[#ee614e] hover:bg-white hover:text-[#ee614e] border-2 border-dashed  border-[#E85A4F]  px-5 py-2.5 text-sm font-medium text-white shadow"
             href="#"
