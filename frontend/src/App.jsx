@@ -15,9 +15,7 @@ function App() {
         </Routes>
 
           
-          <div>
-            <h1>Hello</h1>
-          </div>
+      
     </div>
   )
 }
