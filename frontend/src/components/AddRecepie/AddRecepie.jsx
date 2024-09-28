@@ -12,6 +12,29 @@ const AddRecepie = () => {
   const [description, setDescription] = useState('');
   const [recipe, setRecipe] = useState('');
   const [dishType, setDishType] = useState('Indian'); 
+  const[allergents,setAllergents] = useState([]);
+  const[InputAllergent,setInputAllergent] = useState("");
+  const [flagForRerender,setflagForRerender] = useState(0);
+  
+  const addAllergents = (e)=>{
+    if(e.key==='Enter') 
+      {
+        if(InputAllergent.trim())
+          {
+            e.preventDefault();
+            setAllergents([...allergents, InputAllergent.trim()]);
+            setInputAllergent('')
+          }
+
+      }
+  
+  } 
+
+  const deleteAllergents   = (val)=>{
+    const index = allergents.indexOf(val);
+    allergents.splice(index,1);
+    setflagForRerender((prev)=>prev?0:1);
+  }
 
   const displayImage = (e) => {
     e.preventDefault();
@@ -24,7 +47,7 @@ const AddRecepie = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('image',imageFile);
@@ -45,7 +68,7 @@ const AddRecepie = () => {
     
     try {
       
-      api.post('/upload',RecipeDetails.formData,{
+     await  api.post('/upload',RecipeDetails.formData,{
         RecipeDetails
       })
 
@@ -58,7 +81,7 @@ const AddRecepie = () => {
   };
 
   return (
-    <div className='border-2 h-lvh mt-1 rounded-xl p-5 bg-[#D8C3A5] overflow-hidden'>
+    <div className=' h-auto  border-2 mt-1 rounded-xl p-5 bg-[#D8C3A5] '>
       <div className='flex justify-center'>
         <h1 className='text-3xl mt-4 font-semibold underline-offset-3 underline'>Add Recipe</h1>
       </div>
@@ -121,6 +144,29 @@ const AddRecepie = () => {
               onChange={(e) => setRecipe(e.target.value)}
               className='mt-2 rounded p-2 resize-none h-28'
             />
+
+
+            <label htmlFor="recipe" className='font-semibold'>Allergnets</label>
+            <input
+              type='text'
+              value={InputAllergent}
+              onChange={(e)=>setInputAllergent(e.target.value)}
+              onKeyDown={addAllergents}
+              className='mt-2 rounded p-2'
+            />
+            {
+              allergents.length>0 &&
+            <div className='m-1 p-1'>
+              {
+                allergents.map((val,key)=>(
+                  <div key={key} className=' rounded-lg inline-block border-2 border-red-500 bg-[#D8C3A5] p-2 m-1'>
+                    <p>{val} <span className='cursor-pointer' onClick={()=>deleteAllergents(val)}>X</span> </p>
+                  </div>
+
+                ))
+              }
+            </div>
+            }
 
             <label htmlFor="options" className='font-semibold'>Dish Type</label>
             <select

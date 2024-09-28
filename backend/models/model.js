@@ -9,6 +9,10 @@ const RecepieCreatingDataModel = new mongoose.Schema({
         type:Number,
         required:true
     },
+    description:{
+        type:String,
+        required:true
+    },
     name:{
         type:String,
         required:true
@@ -19,6 +23,10 @@ const RecepieCreatingDataModel = new mongoose.Schema({
     },
     allergents:{
         type:[{type:String}],
+    },
+    typeOfDish:{
+        type:String,
+        required:true
     },
     Bought: {
         type: Number,
