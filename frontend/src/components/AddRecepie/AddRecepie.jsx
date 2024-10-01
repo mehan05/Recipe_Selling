@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState ,useEffect} from 'react';
 import MyContext from '../context/ContextAPI';
 import axios from "axios";
 const AddRecepie = () => {
-  const { RecipeDetails, setRecipeDetails } = useContext(MyContext);
+  // const { RecipeDetails, setRecipeDetails } = useContext(MyContext);
   const [imageFile, setImageFile] = useState();
   const [image, setPreview] = useState(null);
 
@@ -16,6 +16,11 @@ const AddRecepie = () => {
   const[InputAllergent,setInputAllergent] = useState("");
   const [flagForRerender,setflagForRerender] = useState(0);
   
+  // useEffect(() => {
+  //   console.log("Updated RecipeDetails:", RecipeDetails);
+  // }, [RecipeDetails]);
+
+
   const addAllergents = (e)=>{
     if(e.key==='Enter') 
       {
@@ -49,35 +54,34 @@ const AddRecepie = () => {
 
   const handleSubmit =async (e) => {
     e.preventDefault();
+    console.log("Clicked")
     const formData = new FormData();
     formData.append('image',imageFile);
-    setRecipeDetails({
-      formData,
-      name,
-      price,
-      description,
-      recipe,
-      dishType
-    })
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('description', description);
+    formData.append('recipe', recipe);
+    formData.append('dishType', dishType);
+    formData.append('allergents', JSON.stringify(allergents));
+
     const api = axios.create({
         baseURL:"http://localhost:3000",
         headers:{
           "Content-Type":"multipart/form-data"
         }
     })
-    
     try {
-      
-     await  api.post('/upload',RecipeDetails.formData,{
-        RecipeDetails
-      })
-
-      alert("Data Uploaded")
+      console.log("Sending request...");
+      const response = await api.post('/upload', formData);
+        // setRecipeDetails((prev)=>[...prev,response.data])
+      // console.log(RecipeDetails)
+      console.log("Response received:", response.data);
+      console.log("Response Type received:", typeof(response.data));
+      alert("Data Uploaded");
     } catch (error) {
-        alert("ERROR")
-        console.log(error);
+      console.error("Error occurred:", error);
+      alert("ERROR");
     }
-    
   };
 
   return (
