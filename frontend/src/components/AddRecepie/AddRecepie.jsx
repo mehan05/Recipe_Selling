@@ -16,10 +16,7 @@ const AddRecepie = () => {
   const[InputAllergent,setInputAllergent] = useState("");
   const [flagForRerender,setflagForRerender] = useState(0);
   
-  // useEffect(() => {
-  //   console.log("Updated RecipeDetails:", RecipeDetails);
-  // }, [RecipeDetails]);
-
+ 
 
   const addAllergents = (e)=>{
     if(e.key==='Enter') 
@@ -75,6 +72,7 @@ const AddRecepie = () => {
       const response = await api.post('/upload', formData);
       console.log("Response received:", response.data);
       alert("Data Uploaded");
+      window.location.reload();
     } catch (error) {
       console.error("Error occurred:", error);
       alert("ERROR");
