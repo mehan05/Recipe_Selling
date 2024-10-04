@@ -73,10 +73,7 @@ const AddRecepie = () => {
     try {
       console.log("Sending request...");
       const response = await api.post('/upload', formData);
-        // setRecipeDetails((prev)=>[...prev,response.data])
-      // console.log(RecipeDetails)
       console.log("Response received:", response.data);
-      console.log("Response Type received:", typeof(response.data));
       alert("Data Uploaded");
     } catch (error) {
       console.error("Error occurred:", error);

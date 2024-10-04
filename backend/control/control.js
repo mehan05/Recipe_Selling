@@ -24,7 +24,6 @@ const createMulter = () => {
 
 
 const uploadImage = async (req, res) => {
-  const uploadDir = path.join(__dirname, 'uploads');
 
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
@@ -85,8 +84,10 @@ const getImage = async (req, res) => {
         Bought: image.Bought,
         Income: image.Income
       }));
-      res.status(200).json({data:imagesData});
+      console.log(imagesData);
+      res.status(200).json({imagesData});
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: 'Failed to retrieve data' });
     }
   };
