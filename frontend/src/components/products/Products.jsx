@@ -1,10 +1,11 @@
 import { useContext, useEffect } from 'react';
 import MyContext from '../context/ContextAPI';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
-  const { RecipeDetails, setRecipeDetails,activeCard,setactiveCard } = useContext(MyContext);
-  console.log(RecipeDetails)
+  const { RecipeDetails, setRecipeDetails } = useContext(MyContext);
+  const navigate = useNavigate();
 
   const removeDuplicates = (array) => {
     return array.filter((item, index, self) =>
@@ -14,9 +15,9 @@ const Products = () => {
     );
   };
 
-  const setActiveCardFunc = (index)=>{
-      
-  }
+  const setActiveCardFunc = (id) => {
+    navigate(`product/${id}`);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,36 +27,35 @@ const Products = () => {
         const combinedData = [...RecipeDetails, ...newData];
         const uniqueData = removeDuplicates(combinedData);
         setRecipeDetails(uniqueData);
-        
       } catch (error) {
         console.log(error);
       }
-    };  
+    };
     fetchData();
   }, []);
-  console.log(RecipeDetails)
+
   return (
-    <div>
+    <div className='flex flex-col items-center'>
       {RecipeDetails && RecipeDetails.length > 0 ? (
-        RecipeDetails.map((item, index) => (
-          <ul key={index} className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <li >
-              <a href="#" className="group block overflow-hidden border-2 border-red-500 rounded-xl p-2">
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full">
+          {RecipeDetails.map((item, index) => (
+            <li key={index} onClick={() => setActiveCardFunc(item.id)} className="cursor-pointer">
+              <a href="#" className="block overflow-hidden border-2 border-red-500 rounded-xl shadow-lg transition-shadow duration-200 hover:shadow-xl">
                 <img
                   src={`http://localhost:3000${item.image?.filePath}`}
                   alt={item.image?.name || "Default Image"}
-                  className="rounded-xl object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+                  className="rounded-xl object-cover w-full h-60 transition-transform duration-200 transform hover:scale-105 will-change-transform"
                 />
-                <div className="relative bg-white mt-2 rounded-lg pt-1">
+                <div className="relative bg-white mt-2 rounded-lg pt-1 p-3">
                   <p>
-                    <span className="tracking-wider p-1 block text-gray-900">{item.name}</span>
+                    <span className="tracking-wider p-1 block text-gray-900 font-semibold">{item.name}</span>
                     <span className="tracking-wider p-1 text-gray-900">₹{item.price}</span>
                   </p>
                 </div>
               </a>
             </li>
-          </ul>
-        ))
+          ))}
+        </ul>
       ) : (
         <p>No recipes available</p>
       )}

@@ -22,9 +22,9 @@ const createMulter = () => {
   return multer({ storage });
 };
 
-
+let ids = 0;
 const uploadImage = async (req, res) => {
-
+    
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
@@ -43,6 +43,7 @@ const uploadImage = async (req, res) => {
         filePath: `/uploads/${req.file.filename}`, 
         contentType: req.file.mimetype
       },
+      id:ids,
       price: req.body.price,
       name: req.body.name,
       recepie: req.body.recipe,
@@ -57,6 +58,7 @@ const uploadImage = async (req, res) => {
     await newImage.save();
     res.status(200).json({ message: 'Image uploaded successfully!', data: newImage });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Failed to upload image' });
   }
 };
@@ -95,10 +97,11 @@ const getImage = async (req, res) => {
 const getImageById = async (req, res) => {
     try {
       const images = await RecepieCreatingDataModel_1.findById(req.params.id);
+      console.log(req.params.id);
+      console.log(images);
+      if (!images) return res.status(404).json({ error: 'No data found' });
   
-      if (!images.length) return res.status(404).json({ error: 'No data found' });
-  
-      const imagesData = images.map(image => ({
+      const imagesData = [images].map(image => ({
         id: image._id,
         image: {
           name: image.image.name,
@@ -114,7 +117,9 @@ const getImageById = async (req, res) => {
       }));
   
       res.status(200).json(imagesData);
+      console.log(imagesData);
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: 'Failed to retrieve data' });
     }
   };

@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const RecepieCreatingDataModel = new mongoose.Schema({
+    id:{
+        type:Number,
+        required:true
+    },
     image: {
         name: String,
         filePath: String,

@@ -1,6 +1,5 @@
 import Products from '../products/Products'
 import product from "/spiderman-3.jpeg"
-
 const Dashboard = () => {
   return (
     <div className='bg-[#D8C3A5] rounded-xl mt-3'>
@@ -110,6 +109,7 @@ const Dashboard = () => {
 
           
          <Products/>
+         
         </div>
       </section>
     </div>
