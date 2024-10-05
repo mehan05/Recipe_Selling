@@ -2,6 +2,7 @@ const { RecepieCreatingDataModel_1 } = require("../models/model");
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const mongoose = require('mongoose')
 
 const createMulter = () => {
   const uploadDir = path.join(__dirname, 'uploads');
@@ -22,9 +23,9 @@ const createMulter = () => {
   return multer({ storage });
 };
 
-let ids = 0;
 const uploadImage = async (req, res) => {
-    
+      let id = new mongoose.Types.ObjectId();
+
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
@@ -43,9 +44,9 @@ const uploadImage = async (req, res) => {
         filePath: `/uploads/${req.file.filename}`, 
         contentType: req.file.mimetype
       },
-      id:ids,
       price: req.body.price,
       name: req.body.name,
+      id,
       recepie: req.body.recipe,
       description:req.body.description,
       typeOfDish: req.body.dishType,
@@ -97,8 +98,7 @@ const getImage = async (req, res) => {
 const getImageById = async (req, res) => {
     try {
       const images = await RecepieCreatingDataModel_1.findById(req.params.id);
-      console.log(req.params.id);
-      console.log(images);
+  
       if (!images) return res.status(404).json({ error: 'No data found' });
   
       const imagesData = [images].map(image => ({
@@ -124,5 +124,29 @@ const getImageById = async (req, res) => {
     }
   };
 
+  const updateData =  async (req, res) => {
+    const { id } = req.params;
+    const updatedData = req.body;
+    console.log('Request body:', req.body);
+console.log('Request params ID:', req.params.id); 
+    try {
+      const objectId = new mongoose.Types.ObjectId(id);
+     
+      const updatedRecipe = await RecepieCreatingDataModel_1.findOneAndUpdate(
+        { _id: id }, 
+        updatedData
+      );
+  
+      if (!updatedRecipe) {
+        return res.status(404).json({ message: "Recipe not found" });
+      }
+  
+      res.json({ message: "Recipe updated successfully", updatedRecipe });
+    } catch (error) {
+      console.error('Error updating recipe:', error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
 
-module.exports = { uploadImage, getImageById, getImage, createMulter };
+
+module.exports = { uploadImage, getImageById, getImage, createMulter,updateData };

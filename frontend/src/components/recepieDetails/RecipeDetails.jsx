@@ -44,7 +44,12 @@ const RecipeDetails = () => {
 
   const handleSave = async () => {
     try {
-      await api.put(`/image/${id}`, currData[0]); 
+      console.log( currData[0]);
+      await api.put(`/image/${id}`, currData[0],{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      }); 
       setIsEditing(false);
       console.log('Updated successfully');
     } catch (error) {
@@ -95,6 +100,18 @@ const RecipeDetails = () => {
                   )}
                 </p>
 
+                </div>
+                <div className='mb-4'>
+                  <h3 className='font-semibold text-lg text-gray-900'>
+                    Description:
+                  </h3>
+                  <textarea
+                    className='mt-2 w-full h-40 border-2 border-gray-300 p-2 rounded-lg text-gray-700'
+                    readOnly={!isEditing}
+                    value={currData[0].description}
+                    onChange={(e) => handleChange('description', e.target.value)}
+                  />
+                </div>
                 <div className='mb-4'>
                   <h3 className='font-semibold text-lg text-gray-900'>
                     Recipe:
@@ -105,7 +122,6 @@ const RecipeDetails = () => {
                     value={currData[0].recepie}
                     onChange={(e) => handleChange('recepie', e.target.value)}
                   />
-                </div>
 
                 {currData[0].allergents && currData[0].allergents.length > 0 && (
                   <div className='mb-4'>
@@ -138,29 +154,13 @@ const RecipeDetails = () => {
                 <div className='flex justify-between mt-4'>
                   <div className='text-lg'>
                     <span className='font-semibold text-gray-900'>Income:</span>
-                    {isEditing ? (
-                      <input 
-                        type="number"
-                        value={currData[0].Income}
-                        onChange={(e) => handleChange('Income', e.target.value)}
-                        className='ml-2 border border-gray-300 rounded-lg p-1'
-                      />
-                    ) : (
+                  
                       <p className='ml-2 text-gray-700'>{currData[0].Income}</p>
-                    )}
                   </div>
                   <div className='text-lg'>
                     <span className='font-semibold text-gray-900'>Bought:</span>
-                    {isEditing ? (
-                      <input 
-                        type="number"
-                        value={currData[0].Bought}
-                        onChange={(e) => handleChange('Bought', e.target.value)}
-                        className='ml-2 border border-gray-300 rounded-lg p-1'
-                      />
-                    ) : (
+                  
                       <p className='ml-2 text-gray-700'>{currData[0].Bought}</p>
-                    )}
                   </div>
                 </div>
                 <button 

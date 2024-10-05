@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const RecepieCreatingDataModel = new mongoose.Schema({
     id:{
-        type:Number,
+        type:mongoose.Schema.Types.ObjectId,
         required:true
     },
     image: {
