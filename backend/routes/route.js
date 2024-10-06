@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { uploadImage, getImageById, getImage, createMulter,updateData } = require("../control/control");
+const { uploadImage, getImageById, getImage, createMulter,updateData,loginUser,registerUser } = require("../control/control");
 
 const upload = createMulter();
 
@@ -9,5 +9,7 @@ router
   .get('/images', getImage)
   .get('/image/:id', getImageById)
   .put('/image/:id',updateData)
+  .put('/register',registerUser)
+  .put('/login',loginUser)
 
 module.exports = router;

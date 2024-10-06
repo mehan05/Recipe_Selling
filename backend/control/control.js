@@ -1,4 +1,4 @@
-const { RecepieCreatingDataModel_1 } = require("../models/model");
+const { RecepieCreatingDataModel_1,UserModel_1 } = require("../models/model");
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
@@ -22,6 +22,36 @@ const createMulter = () => {
 
   return multer({ storage });
 };
+
+const registerUser = async (req, res) => {
+  const { address, name } = req.body;
+
+  try {
+    
+    const newUser = new UserModel_1({ name , address, recipes: [] });
+    await newUser.save();
+  
+    return res.status(201).json({ message: 'User registered successfully!', user: newUser });
+  } catch (error) {
+      console.log("Error from register",error);
+      return res.status(500).json({message:"Issue With Register",error:error});
+  }
+
+};
+
+const loginUser = async (req, res) => {
+  const { name,address } = req.body;
+  try {
+      const existingUser = await UserModel_1.findOne({ address });
+      if (!existingUser) {
+        return res.status(404).json({ message: 'User not found. Please register!' });
+      }
+      return res.status(200).json({ message: 'Login successful!', user: existingUser });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
 const uploadImage = async (req, res) => {
       let id = new mongoose.Types.ObjectId();
@@ -149,4 +179,4 @@ console.log('Request params ID:', req.params.id);
   }
 
 
-module.exports = { uploadImage, getImageById, getImage, createMulter,updateData };
+module.exports = { uploadImage, getImageById, getImage, createMulter,updateData ,registerUser,loginUser};
