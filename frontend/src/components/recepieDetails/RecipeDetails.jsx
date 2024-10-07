@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 const RecipeDetails = () => {
-  const { activeCard, setactiveCard } = useContext(MyContext);
+  const { currentUser,setCurrentUser } = useContext(MyContext);
   const [currData, setCurData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const { id } = useParams();
@@ -56,6 +56,11 @@ const RecipeDetails = () => {
       console.log('Error updating:', error);
     }
   };
+
+  const handleBuy = async()=>{
+    console.log("Buyer clicked");
+  }
+
 
   return (
     <div className='flex justify-center m-4'>
@@ -113,6 +118,9 @@ const RecipeDetails = () => {
                   />
                 </div>
                 <div className='mb-4'>
+                {currentUser==='chef'&&
+                  <>
+                  
                   <h3 className='font-semibold text-lg text-gray-900'>
                     Recipe:
                   </h3>
@@ -122,6 +130,8 @@ const RecipeDetails = () => {
                     value={currData[0].recepie}
                     onChange={(e) => handleChange('recepie', e.target.value)}
                   />
+                  </>
+                }
 
                 {currData[0].allergents && currData[0].allergents.length > 0 && (
                   <div className='mb-4'>
@@ -150,25 +160,43 @@ const RecipeDetails = () => {
                     </ul>
                   </div>
                 )}
+                {currentUser==='chef'&&
+                    <>
+                    
+                    <div className='flex justify-between mt-4'>
+                      <div className='text-lg'>
+                        <span className='font-semibold text-gray-900'>Income:</span>
+                      
+                          <p className='ml-2 text-gray-700'>{currData[0].Income}</p>
+                      </div>
+                      <div className='text-lg'>
+                        <span className='font-semibold text-gray-900'>Bought:</span>
+                      
+                          <p className='ml-2 text-gray-700'>{currData[0].Bought}</p>
+                      </div>
+                    </div>
+                    </>
+                }
 
-                <div className='flex justify-between mt-4'>
-                  <div className='text-lg'>
-                    <span className='font-semibold text-gray-900'>Income:</span>
-                  
-                      <p className='ml-2 text-gray-700'>{currData[0].Income}</p>
-                  </div>
-                  <div className='text-lg'>
-                    <span className='font-semibold text-gray-900'>Bought:</span>
-                  
-                      <p className='ml-2 text-gray-700'>{currData[0].Bought}</p>
-                  </div>
-                </div>
+                { currentUser=='chef'?(
+
                 <button 
                   className='mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg'
                   onClick={isEditing ? handleSave : handleEditToggle}
                 >
                   {isEditing ? 'Save Changes' : 'Edit'}
                 </button>
+                ):(
+                <button 
+                  className='mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg'
+                  onClick={handleBuy}
+                >
+                 Buy
+                </button>
+
+                )
+
+                }
               </div>
             </div>
           </div>

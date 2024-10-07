@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, {  useContext, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import MyContext from '../context/ContextAPI';
 const Login = () => {
+  const {setCurrentUser} = useContext(MyContext)
   const [address,setAddress] = useState('');
   const [username,setUsername] = useState('');
   const navigate =  useNavigate();
@@ -19,21 +21,44 @@ const Login = () => {
         address
       })
       console.log(response);
-      if(response.data=="'User not found. Please register!")
+      if(response.status==200)
       {
-        alert("'User not found. Please register!");
-        return;
-      }
-      else{
+        alert("Login Successful");
+        console.log("alert")
+        
         navigate("") 
+      }
+      else if(response.status==202)
+      {
+        navigate("/chef/dashboard");
+      }
+      else if(response.status==203)
+      {
+        navigate("/user/dashboard");
       }
       
     } catch (error) {
        
-          alert(error.data);
-        
-        console.log(error); 
-        
+      if (error.response) {
+         if (error.status==404) {
+          alert('User not found. Please register!');
+          navigate("/register")
+          return;
+        } 
+        else{
+
+          console.log(`Error Status: ${error.response.status}`);
+          return;
+        }
+      } else if (error.request) {
+        console.log("No response received", error.request);
+        alert('Server did not respond. Please try again later.');
+      } 
+     
+      else {
+        console.log('Error', error.message);
+        alert('An error occurred. Please try again.');
+      }        
     }
   }
   return (

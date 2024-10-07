@@ -24,14 +24,37 @@ const createMulter = () => {
 };
 
 const registerUser = async (req, res) => {
-  const { address, name } = req.body;
+  const { address, username, isChef, isUser } = req.body;
 
+  let position = null;
+  if(isChef)
+  {
+    position="Chef";
+  }
+  else{
+    position="User";
+  }
   try {
-    
-    const newUser = new UserModel_1({ name , address, recipes: [] });
+
+    const checking = await UserModel_1.findOne({address});
+    if(checking )
+    {
+      return res.status(202).json({message:"User already register"});
+    }
+
+    const newUser = new UserModel_1({ name:username , address, position,recipes: [] });
     await newUser.save();
+
+    if(isChef)
+      {
+        return res.status(203).json({message:"chef"});
+      }
+      else{
+      return  res.status(204).json({message:"user"});
+      }
+   
   
-    return res.status(201).json({ message: 'User registered successfully!', user: newUser });
+  
   } catch (error) {
       console.log("Error from register",error);
       return res.status(500).json({message:"Issue With Register",error:error});
@@ -46,7 +69,13 @@ const loginUser = async (req, res) => {
   try {
       const existingUser = await UserModel_1.findOne({ address });
       if (!existingUser) {
-        return res.status(200).json({ message: 'User not found. Please register!' });
+        return res.status(404).json({ message: 'User not found. Please register!' });
+      }
+
+      if (existingUser.position === 'Chef') {
+        return res.status(202).json({ message: 'Login successful as Chef!', user: existingUser });
+      } else if (existingUser.position === 'User') {
+        return res.status(203).json({ message: 'Login successful as User!', user: existingUser });
       }
       return res.status(200).json({ message: 'Login successful!', user: existingUser });
   } catch (error) {
