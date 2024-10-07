@@ -9,7 +9,7 @@ router
   .get('/images', getImage)
   .get('/image/:id', getImageById)
   .put('/image/:id',updateData)
-  .put('/register',registerUser)
-  .put('/login',loginUser)
+  .post('/register',registerUser)
+  .post('/login',loginUser)
 
 module.exports = router;

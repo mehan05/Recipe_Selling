@@ -1,6 +1,41 @@
-import React from 'react'
-
+import React, { useState } from 'react'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
+  const [address,setAddress] = useState('');
+  const [username,setUsername] = useState('');
+  const navigate =  useNavigate();
+  const api = axios.create({
+    baseURL:"http://localhost:3000",
+    headers:{
+      "Content-Type":"application/json"
+    }
+  });
+  const handleLogin = async(e)=>{
+    e.preventDefault();
+    try {
+      const response = await api.post('/login',{
+        username,
+        address
+      })
+      console.log(response);
+      if(response.data=="'User not found. Please register!")
+      {
+        alert("'User not found. Please register!");
+        return;
+      }
+      else{
+        navigate("") 
+      }
+      
+    } catch (error) {
+       
+          alert(error.data);
+        
+        console.log(error); 
+        
+    }
+  }
   return (
     <div>
            <div className='bg-[#D8C3A5] rounded-xl mt-3'>
@@ -13,14 +48,16 @@ const Login = () => {
             </div>
 
 
-          <form className="max-w-lg mx-auto mt-8 bg-white p-6 rounded-lg shadow-md">
+          <form className="max-w-lg mx-auto mt-8 bg-white p-6 rounded-lg shadow-md" onSubmit={handleLogin}>
             <div className="mb-5">
               <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900">
                 Address
               </label>
               <input
-                type="email"
+                onChange={(e)=>setAddress(e.target.value)}
+                type="text"
                 id="address"
+                value={address}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Wallet Address"
                 required
@@ -31,8 +68,10 @@ const Login = () => {
                 UserName
               </label>
               <input
-                type="password"
+              onChange={(e)=>setUsername(e.target.value)}
+                type="text"
                 id="Username"
+                value={username}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 required
               />
