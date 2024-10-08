@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom"
 import logo from "/logo.svg"
+import { useContext } from "react"
+import MyContext from "../context/ContextAPI"
 const Header = () => {
+  const{currentUser,walletAddress} = useContext(MyContext)
   return (
     <div>
         <header className="bg-[#D8C3A5] rounded-xl ">
@@ -16,16 +19,19 @@ const Header = () => {
       <div className="hidden md:block">
         <nav aria-label="Global">
           <ul className="flex items-center gap-6 text-sm">
-            <NavLink to="/dashboard">
-            <li className="text-black hover:underline hover:underline-offset-8  font-semibold text-lg  transition hover:decoration-[red]" >
+            <NavLink to={currentUser=="chef"?"chef/dashboard":"user/dashboard"}>
+            <li className="text-black hover:underline hover:underline-offset-8  font-sem  ibold text-lg  transition hover:decoration-[red]" >
                DashBoard 
             </li>
             </NavLink>
-            <NavLink to="/add-recipe">
+            {currentUser=='chef'&&
+
+            <NavLink to="chef/add-recipe">
             <li className="text-black hover:underline hover:underline-offset-8  font-semibold text-lg  transition hover:decoration-[red]" >
                Add-Recipe 
             </li>
             </NavLink>
+            }
 
             {/* <li>
               <a className="text-black font-semibold text-lg    hover:underline hover:underline-offset-8  transition hover:decoration-[red] " href="#"> Add Recepie </a>
@@ -43,7 +49,7 @@ const Header = () => {
             className="rounded-md bg-[#E85A4F] transition hover:bg-[#ee614e] hover:bg-white hover:text-[#ee614e] border-2 border-dashed  border-[#E85A4F]  px-5 py-2.5 text-sm font-medium text-white shadow"
             href="#"
           >
-            Address
+            {walletAddress.slice(0,4)+"..."+walletAddress.slice(39,42)} 
           </a>
         </div>
 

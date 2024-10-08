@@ -25,7 +25,7 @@ const createMulter = () => {
 
 const registerUser = async (req, res) => {
   const { walletAddress, username, isChef, isUser } = req.body;
-
+  console.log("wallet Address from register:",walletAddress)
   let position = null;
   if(isChef)
   {
@@ -42,7 +42,7 @@ const registerUser = async (req, res) => {
       return res.status(202).json({message:"User already register"});
     }
 
-    const newUser = new UserModel_1({ name:username , walletAddress, position,recipes: [] });
+    const newUser = new UserModel_1({ name:username , address:walletAddress, position,recipes: [] });
     await newUser.save();
 
     if(isChef)

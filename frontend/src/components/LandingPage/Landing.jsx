@@ -37,6 +37,20 @@ const Landing = () => {
               setWalletAddress(accounts[0]);
             }
           }
+
+          ethereum.on("accountsChanged",(accounts)=>{
+              if(accounts.length>0)
+              {
+                setWalletAddress(accounts[0]);
+                console.log("accoutn changed",accounts[0]);
+                window.location.reload(); 
+              }
+              else{
+                setWalletAddress("");
+                alert("cant find account address");
+                return;
+              }
+          })
           CheckingConnect();
       },[])
   return (

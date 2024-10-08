@@ -1,4 +1,4 @@
-import { Routes,Route } from 'react-router-dom'
+import { Routes,Route, useLocation } from 'react-router-dom'
 import './App.css'
 import AddRecepie from './components/AddRecepie/AddRecepie'
 import Dashboard from './components/dashboard/Dashboard'
@@ -13,10 +13,13 @@ import MyContext from './components/context/ContextAPI'
 
 function App() {
     const {currentUser,setCurrentUser} = useContext(MyContext);
+    setCurrentUser(localStorage.getItem("currentUser"));
     console.log(currentUser)
+    const location = useLocation();
+    console.log("location:",location.pathname)
   return (
       <div className='font-Fredoka '>
-        {currentUser&& <Header/>}
+        {!(location.pathname==="/" || location.pathname==="/login" ||location.pathname==="/register")&& <Header/>}
          
         <Routes>
           {
@@ -33,7 +36,6 @@ function App() {
               <Route path='user/dashboard' element={<Dashboard/>} />
                   <Route path="user/dashboard/product/:id" element={<RecipeDetails />} />
 
-                  <Route path='user/add-recipe' element={<AddRecepie/>} />
               </>
             )
           }

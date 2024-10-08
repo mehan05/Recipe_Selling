@@ -18,7 +18,18 @@ const Register = () => {
       'Content-Type': 'application/json',
     },
   });
-
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+          window.location.reload(); 
+        }
+      });
+    } else {
+      console.error('MetaMask is not installed');
+    }
+  }, [setWalletAddress]);
     console.log("current User",currentUser)
   
   const handleRegister = async (e) => {
@@ -46,10 +57,12 @@ const Register = () => {
       }
       else if(response.status===203){
         setCurrentUser("chef");
+        localStorage.setItem('currentUser',"chef")
             navigate("/chef/dashboard");
           }
           else if(response.status===204){
             setCurrentUser("user");
+            localStorage.setItem('currentUser',"user");
             navigate("/user/dashboard");
       }
       else {

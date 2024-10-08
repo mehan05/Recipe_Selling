@@ -1,9 +1,9 @@
-import React, {  useContext, useState } from 'react'
+import React, {  useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import MyContext from '../context/ContextAPI';
 const Login = () => {
-  const {setCurrentUser,walletAddress,setWalletAddress} = useContext(MyContext)
+  const {currentUser,setCurrentUser,walletAddress,setWalletAddress} = useContext(MyContext)
   const [username,setUsername] = useState('');
   const navigate =  useNavigate();
   const api = axios.create({
@@ -12,6 +12,18 @@ const Login = () => {
       "Content-Type":"application/json"
     }
   });
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+          window.location.reload(); 
+        }
+      });
+    } else {
+      console.error('MetaMask is not installed');
+    }
+  }, [setWalletAddress]);
   const handleLogin = async(e)=>{
     e.preventDefault();
     try {
