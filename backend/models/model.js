@@ -4,7 +4,7 @@ const UserModel  = new mongoose.Schema({
         type: String,
         required: true,
     },
-    address:{
+    walletAddress:{
         type: String,
         required: true,
     },

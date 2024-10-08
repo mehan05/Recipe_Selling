@@ -3,8 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import MyContext from '../context/ContextAPI';
 const Login = () => {
-  const {setCurrentUser} = useContext(MyContext)
-  const [address,setAddress] = useState('');
+  const {setCurrentUser,walletAddress,setWalletAddress} = useContext(MyContext)
   const [username,setUsername] = useState('');
   const navigate =  useNavigate();
   const api = axios.create({
@@ -18,7 +17,7 @@ const Login = () => {
     try {
       const response = await api.post('/login',{
         username,
-        address
+        walletAddress
       })
       console.log(response);
       if(response.status==200)
@@ -62,10 +61,10 @@ const Login = () => {
     }
   }
   return (
-    <div>
-           <div className='bg-[#D8C3A5] rounded-xl mt-3'>
+    <div className='flex justify-center mt-20  '>
+           <div className='bg-[#D8C3A5] rounded-xl mt-3 w-[1200px] h-[600px] border-2 border-red-500 '>
       <section>
-        <div className="mx-auto max-w-screen-md px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div className="mx-auto  px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
 
             <div className='flex justify-center'>
                 <h1 className=' font-semibold text-2xl'>Login</h1>
@@ -79,10 +78,9 @@ const Login = () => {
                 Address
               </label>
               <input
-                onChange={(e)=>setAddress(e.target.value)}
                 type="text"
                 id="address"
-                value={address}
+                defaultValue={walletAddress?walletAddress:"Wallet Address not defined"}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Wallet Address"
                 required

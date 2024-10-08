@@ -9,7 +9,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ContextProvider>
       <BrowserRouter>
-        <div className=' m-5 border-2 border-[#8E8D8A] rounded-lg'>
+        <div className=' m-5 border-2 border-[#8E8D8A] rounded-lg '>
         <App  className = " bg-[#8E8D8A]"/>
         </div>
       </BrowserRouter>

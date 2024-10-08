@@ -24,7 +24,7 @@ const createMulter = () => {
 };
 
 const registerUser = async (req, res) => {
-  const { address, username, isChef, isUser } = req.body;
+  const { walletAddress, username, isChef, isUser } = req.body;
 
   let position = null;
   if(isChef)
@@ -36,13 +36,13 @@ const registerUser = async (req, res) => {
   }
   try {
 
-    const checking = await UserModel_1.findOne({address});
+    const checking = await UserModel_1.findOne({walletAddress});
     if(checking )
     {
       return res.status(202).json({message:"User already register"});
     }
 
-    const newUser = new UserModel_1({ name:username , address, position,recipes: [] });
+    const newUser = new UserModel_1({ name:username , walletAddress, position,recipes: [] });
     await newUser.save();
 
     if(isChef)
@@ -63,11 +63,11 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { username,address } = req.body;
+  const { username,walletAddress } = req.body;
   console.log("name",username);
-  console.log("address",address);
+  console.log("address",walletAddress);
   try {
-      const existingUser = await UserModel_1.findOne({ address });
+      const existingUser = await UserModel_1.findOne({ walletAddress });
       if (!existingUser) {
         return res.status(404).json({ message: 'User not found. Please register!' });
       }

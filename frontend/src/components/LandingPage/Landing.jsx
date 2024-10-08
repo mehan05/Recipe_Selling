@@ -1,15 +1,56 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import MyContext from '../context/ContextAPI';
+import {ethers} from "ethers";
 const Landing = () => {
     const[toogle,settoogle] = useState(false);
+    const{walletAddress,setWalletAddress} = useContext(MyContext)
     console.log(toogle  )
-    const handleGetStarted = ()=>{
+    console.log(walletAddress)
+    const {ethereum} = window;
+      const handleConnect = async()=>{
+          if(typeof ethereum!="undefined")
+          {
+            try {
+              const accounts = await ethereum.request({method:"eth_requestAccounts"});
+              console.log(accounts[0]);
+              setWalletAddress(accounts[0]);
+              
+            } catch (error) {
+              alert("Error in Connecting Metamask.")
+              console.log(error);
+              return;
+            }
+          }
+          else{
+            alert("Install Metamask");
+            return;
+          }
 
-    }
+      }
+      useEffect(()=>{
+          const CheckingConnect = async()=>{
+            if(typeof window.ethereum !== "undefined")
+            { 
+              const provider =  new ethers.BrowserProvider(ethereum);
+              const accounts =await ethereum.request({method:"eth_accounts"});
+              setWalletAddress(accounts[0]);
+            }
+          }
+          CheckingConnect();
+      },[])
   return (
-    <div className="bg-[#D8C3A5] rounded-xl mt-3 h-[650px] ">
+    <div className="bg-[#D8C3A5] rounded-xl mt-3 h-[700px] ">
       <section className=''>
+        <div className='flex justify-center relative mt-6 items-center'>
+          <div className=' absolute top-5'>
+              <h1 className=' text-3xl underline underline-offset-4 font-semibold'>🍿 D S R W 🍿</h1>
+
+          </div>
+            <div onClick={handleConnect}   className='  absolute top-5 right-5 border-2 border-red-500 shadow-lg shadow-red p-4 rounded-xl hover:bg-red-500 hover:text-white hover:border-dashed hover:border-2 hover:border-white hove:transition-transform duration-300 '> 
+                <button className=' font-semibold text-lg'>{walletAddress?walletAddress?.slice(0,4)+"..."+walletAddress?.slice(39,42):"Connect Wallet"}</button>
+            </div>
+        </div>
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 relative top-20">
           <header>
             <div className='border-2 m-3 p-4 border-red-600 rounded-xl text-lg'>
@@ -44,13 +85,17 @@ const Landing = () => {
             <div className="hidden sm:flex sm:gap-4">
                 {toogle==false? (
 
-                    <div className="relative">
+                    walletAddress && 
 
-                        <button onClick={() => settoogle((prev) => !prev)}
- className="px-6 py-3 bg-black text-white rounded-lg shadow-md hover:bg-gray-900">
-                                Get Started
-                        </button>
-                    </div>
+                      <div className="relative">
+  
+                          <button onClick={() => settoogle((prev) => !prev)}
+   className="px-6 py-3 bg-black text-white rounded-lg shadow-md hover:bg-gray-900">
+                                  Get Started
+                          </button>
+                      </div>
+
+                    
                 ):(
                     <div className='flex justify-between '> 
 

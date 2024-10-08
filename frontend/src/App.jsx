@@ -13,9 +13,11 @@ import MyContext from './components/context/ContextAPI'
 
 function App() {
     const {currentUser,setCurrentUser} = useContext(MyContext);
+    console.log(currentUser)
   return (
-      <div className='font-Fredoka'>
-          <Header/>
+      <div className='font-Fredoka '>
+        {currentUser&& <Header/>}
+         
         <Routes>
           {
             currentUser==='chef'?(
