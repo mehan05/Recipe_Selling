@@ -14,7 +14,7 @@ import MyContext from './components/context/ContextAPI'
 function App() {
     const {currentUser,setCurrentUser} = useContext(MyContext);
     setCurrentUser(localStorage.getItem("currentUser"));
-    console.log(currentUser)
+    console.log("current user from app.jsx",currentUser)
     const location = useLocation();
     console.log("location:",location.pathname)
   return (

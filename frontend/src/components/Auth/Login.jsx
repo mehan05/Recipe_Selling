@@ -31,6 +31,7 @@ const Login = () => {
         username,
         walletAddress
       })
+      localStorage.setItem('currentUser',response.data.user.position.toLowerCase());
       console.log("getting position from logn",response.user);
       if(response.status==200)
       {

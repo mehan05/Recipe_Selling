@@ -26,8 +26,7 @@ const RecipeDetails = () => {
       try {
         const response = await api.get(`/image/${id}`);
         setCurData(response.data);
-        setGettingChefAddressFromDB(currData[0]?.chefAddress);
-        setRecipeAmount(ethers.utils.parseEther(Number(currData[0].price)));
+        setGettingChefAddressFromDB(response.data[0]?.chefAddress);     
       } catch (error) {
         console.log(error);
       }
@@ -63,35 +62,52 @@ const RecipeDetails = () => {
     }
   };
 
-  const fetchingUserAddress = async()=>{
-    const accounts = await window.ethereum.request({method:"eth_accounts"});
-    setBuyerWalletAddress(accounts[0]);
-
-  }
-  
-  const handleBuy = async()=>{
-    fetchingUserAddress();
-    if((gettingChefAddressFromDB!="" || gettingChefAddressFromDB!=undefined || gettingChefAddressFromDB!=null) && (gettingChefAddressFromDB!==BuyerWalletAddress) )
-    {
-      try {
-        const tx = await BuyerWalletAddress.sendTransaction({
-          to:gettingChefAddressFromDB,
-          value:RecipeAmount
-        })
-        await tx.wait();
-        alert("Transaction Succeesful");
-        return;
-      } catch (error) {
-          console.log(error);
-          return
+  const fetchingUserAddress = async () => {
+    try {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: "eth_accounts" });
+        setBuyerWalletAddress(accounts[0]);
+      } else {
+        alert('Please install MetaMask or use a Web3 browser');
       }
-      
+    } catch (error) {
+      console.error('Error fetching wallet address:', error);
+      alert('Could not fetch wallet address');
     }
-    else{
-      alert("Problem with the addresses");
-      return;
+  };  
+  
+  const handleBuy = async () => {
+    await fetchingUserAddress();
+    try {
+      if (
+        gettingChefAddressFromDB &&
+        gettingChefAddressFromDB !== BuyerWalletAddress &&
+        currData &&
+        currData[0]?.price
+      ) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+  
+        const amountInEther = ethers.parseEther(currData[0].price.toString());
+  
+        alert('Please confirm the transaction in MetaMask');
+  
+        const tx = await signer.sendTransaction({
+          to: gettingChefAddressFromDB,
+          value: amountInEther,
+        });
+  
+        await tx.wait();
+        alert('Transaction Successful');
+      } else {
+        alert('Problem with the addresses or missing price');
+      }
+    } catch (error) {
+      console.error('Transaction error:', error);
+      alert('Transaction failed: ' + (error.message || 'Unknown error occurred'));
     }
-  }
+  };
+  
 
   return (
     <div className='flex justify-center m-4'>
