@@ -2,12 +2,16 @@ import React, { useContext, useState, useEffect } from 'react';
 import MyContext from '../context/ContextAPI';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { ethers } from 'ethers';
 
 const RecipeDetails = () => {
   const { currentUser,setCurrentUser } = useContext(MyContext);
   const [currData, setCurData] = useState(null);
+  const[RecipeAmount,setRecipeAmount]  = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const { id } = useParams();
+  const[BuyerWalletAddress,setBuyerWalletAddress] = useState("");
+  const[gettingChefAddressFromDB,setGettingChefAddressFromDB] = useState("");
   console.log(currData);
 
   const api = axios.create({
@@ -22,6 +26,8 @@ const RecipeDetails = () => {
       try {
         const response = await api.get(`/image/${id}`);
         setCurData(response.data);
+        setGettingChefAddressFromDB(currData[0]?.chefAddress);
+        setRecipeAmount(ethers.utils.parseEther(Number(currData[0].price)));
       } catch (error) {
         console.log(error);
       }
@@ -57,10 +63,35 @@ const RecipeDetails = () => {
     }
   };
 
-  const handleBuy = async()=>{
-    console.log("Buyer clicked");
-  }
+  const fetchingUserAddress = async()=>{
+    const accounts = await window.ethereum.request({method:"eth_accounts"});
+    setBuyerWalletAddress(accounts[0]);
 
+  }
+  
+  const handleBuy = async()=>{
+    fetchingUserAddress();
+    if((gettingChefAddressFromDB!="" || gettingChefAddressFromDB!=undefined || gettingChefAddressFromDB!=null) && (gettingChefAddressFromDB!==BuyerWalletAddress) )
+    {
+      try {
+        const tx = await BuyerWalletAddress.sendTransaction({
+          to:gettingChefAddressFromDB,
+          value:RecipeAmount
+        })
+        await tx.wait();
+        alert("Transaction Succeesful");
+        return;
+      } catch (error) {
+          console.log(error);
+          return
+      }
+      
+    }
+    else{
+      alert("Problem with the addresses");
+      return;
+    }
+  }
 
   return (
     <div className='flex justify-center m-4'>
@@ -76,7 +107,7 @@ const RecipeDetails = () => {
             </div>
 
             <div className='w-full flex-grow relative mt-10'>
-              <div className='w-full flex flex-col border-2 border-red-500 shadow-lg shadow-red-500 p-6 rounded-xl bg-[#f8f1e7]'>
+              <div className='w-full flex flex-col    p-6 rounded-xl bg-[#f8f1e7]'>
                 <h2 className='text-2xl font-semibold text-gray-900'>
                   Name: 
                   {isEditing ? (
@@ -89,6 +120,7 @@ const RecipeDetails = () => {
                   ) : (
                     currData[0].name
                   )}
+                  <br />
                 </h2>
 
                 <p className='text-lg text-gray-700 mt-2'>
@@ -104,6 +136,9 @@ const RecipeDetails = () => {
                     currData[0].price
                   )}
                 </p>
+                <p className='text-lg text-gray-700 mt-2'>
+                 Chef Address: {currData[0].chefAddress}      
+                </p>  
 
                 </div>
                 <div className='mb-4'>
@@ -136,7 +171,7 @@ const RecipeDetails = () => {
                 {currData[0].allergents && currData[0].allergents.length > 0 && (
                   <div className='mb-4'>
                     <h3 className='font-semibold text-lg text-gray-900'>
-                      Allergens:
+                      Allergents:
                     </h3>
                     <ul className='list-disc ml-5 mt-2'>
                       {currData[0].allergents.map((allergen, index) => (

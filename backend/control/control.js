@@ -24,15 +24,15 @@ const createMulter = () => {
 };
 
 const registerUser = async (req, res) => {
-  const { walletAddress, username, isChef, isUser } = req.body;
+  const { walletAddress, username, position } = req.body;
   console.log("wallet Address from register:",walletAddress)
-  let position = null;
-  if(isChef)
+  let position_1 = null;
+  if(position)
   {
-    position="Chef";
+    position_1="Chef";
   }
   else{
-    position="User";
+    position_1="User";
   }
   try {
 
@@ -42,10 +42,10 @@ const registerUser = async (req, res) => {
       return res.status(202).json({message:"User already register"});
     }
 
-    const newUser = new UserModel_1({ name:username , address:walletAddress, position,recipes: [] });
+    const newUser = new UserModel_1({ name:username , address:walletAddress,position: position_1,recipes: [] });
     await newUser.save();
 
-    if(isChef)
+    if(position)
       {
         return res.status(203).json({message:"chef"});
       }
@@ -67,7 +67,7 @@ const loginUser = async (req, res) => {
   console.log("name",username);
   console.log("address",walletAddress);
   try {
-      const existingUser = await UserModel_1.findOne({ walletAddress });
+      const existingUser = await UserModel_1.findOne({ address:walletAddress });
       if (!existingUser) {
         return res.status(404).json({ message: 'User not found. Please register!' });
       }
@@ -105,6 +105,7 @@ const uploadImage = async (req, res) => {
         filePath: `/uploads/${req.file.filename}`, 
         contentType: req.file.mimetype
       },
+      chefAddress:req.body.chefAddress,
       price: req.body.price,
       name: req.body.name,
       id,
@@ -118,7 +119,15 @@ const uploadImage = async (req, res) => {
 
     console.log(newImage);
     await newImage.save();
-    res.status(200).json({ message: 'Image uploaded successfully!', data: newImage });
+
+    const user = await UserModel_1.findOne({ address: req.body.chefAddress });
+    if (user) {
+      user.recipes.push(newImage._id);
+      await user.save();  
+    }
+
+    res.status(200).json({ message: 'Image uploaded and linked to user successfully!', data: newImage });
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'Failed to upload image' });
@@ -171,6 +180,7 @@ const getImageById = async (req, res) => {
         },
         price: image.price,
         name: image.name,
+        chefAddress:image.chefAddress,
         recepie: image.recepie,
         allergents: image.allergents,
         Bought: image.Bought,

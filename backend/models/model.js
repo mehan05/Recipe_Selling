@@ -23,6 +23,10 @@ const RecepieCreatingDataModel = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         required:true
     },
+    chefAddress:{
+        type:String,
+        required:true
+    },
     image: {
         name: String,
         filePath: String,

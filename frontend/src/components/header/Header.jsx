@@ -1,20 +1,25 @@
 import { NavLink } from "react-router-dom"
 import logo from "/logo.svg"
 import { useContext } from "react"
+import { Link } from "react-router-dom"
 import MyContext from "../context/ContextAPI"
 const Header = () => {
   const{currentUser,walletAddress} = useContext(MyContext)
   return (
     <div>
         <header className="bg-[#D8C3A5] rounded-xl ">
-  <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-    <div className="flex h-16 items-center  justify-between  ">
-      <div className="md:flex md:items-center md:gap-12">
+  <div className="mx-auto max-w-screen-xl   px-4 sm:px-6 lg:px-8">
+    <div className="flex h-16 items-center   justify-between  ">
+      <Link to="/">
+      
+      <div className="md:flex md:items-center  md:gap-12">
         <a className="flex justify-start" href="#" >
             <img src={logo} alt="logo" className="h-10 w-50 flex " />
           <span className=" p-4">DSRW</span>
         </a>
       </div>
+
+      </Link>
 
       <div className="hidden md:block">
         <nav aria-label="Global">

@@ -7,8 +7,7 @@ const Register = () => {
   const{walletAddress,setWalletAddress} = useContext(MyContext)
   const [address, setAddress] = useState('');
   const [username, setUsername] = useState('');
-  const [isChef, setIsChef] = useState("");
-  const [isUser, setIsUser] = useState("");
+  const [position, setPosition] = useState("");
   const navigate = useNavigate();
   const {currentUser,setCurrentUser} = useContext(MyContext)
   console.log("Address from register",walletAddress)
@@ -18,6 +17,15 @@ const Register = () => {
       'Content-Type': 'application/json',
     },
   });
+  console.log("value of position:",position);
+  if(position)
+  {
+    console.log("CHEF");
+  }
+  if(position==false)
+  {
+    console.log("USER");
+  }
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
@@ -34,7 +42,7 @@ const Register = () => {
   
   const handleRegister = async (e) => {
     e.preventDefault();
-    if(isUser=="" && isChef=="" )
+    if(position==-1 )
     {
       alert("please specify that you are a chef or user.");
       return;
@@ -43,8 +51,7 @@ const Register = () => {
       const response = await api.post('/register', {
         username,
         walletAddress,
-        isChef,
-        isUser,
+        position
       });
 
       if (response.status === 201) {
@@ -119,8 +126,11 @@ const Register = () => {
                     id="chef"
                     type="radio"
                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
-                    checked={isChef}
-                    onChange={() => setIsChef(!isChef)} 
+                    checked={position==true}
+                    onChange={() => {
+                      setPosition(true)
+                      localStorage.setItem("currentUser","chef")
+                    }}  
                   />
                 </div>
                 <label htmlFor="chef" className="ml-2 text-sm font-medium text-gray-900">
@@ -135,8 +145,11 @@ const Register = () => {
                     id="user"
                     type="radio"
                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-7 focus:ring-red-700"
-                    checked={isUser}
-                    onChange={() => setIsUser(!isUser)} 
+                    checked={position==false}
+                    onChange={() => {
+                      setPosition(false)
+                      localStorage.setItem("currentUser","user")
+                    }} 
                   />
                 </div>
                 <label htmlFor="user" className="ml-2 text-sm font-medium text-gray-900">

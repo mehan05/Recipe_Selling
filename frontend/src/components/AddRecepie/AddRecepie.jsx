@@ -15,8 +15,14 @@ const AddRecepie = () => {
   const[allergents,setAllergents] = useState([]);
   const[InputAllergent,setInputAllergent] = useState("");
   const [flagForRerender,setflagForRerender] = useState(0);
-  
- 
+  const[chefAddress,setChefAddress] = useState("");
+
+  const {ethereum }= window
+  const fetchAccountAddress = async()=>{
+    const accounts =await ethereum.request({method:"eth_accounts"});
+    setChefAddress(accounts[0]);
+  }
+  fetchAccountAddress(); 
 
   const addAllergents = (e)=>{
     if(e.key==='Enter') 
@@ -53,6 +59,7 @@ const AddRecepie = () => {
     e.preventDefault();
     console.log("Clicked")
     const formData = new FormData();
+    formData.append('chefAddress',chefAddress);
     formData.append('image',imageFile);
     formData.append('name', name);
     formData.append('price', price);
@@ -110,6 +117,18 @@ const AddRecepie = () => {
 
         <div className='flex justify-end m-10'>
           <form onSubmit={handleSubmit} className='flex flex-col gap-3 w-[700px]'>
+
+            <label htmlFor="address" className='font-semibold'>Address</label>
+          <input
+                defaultValue={chefAddress}
+                type="text"
+                id="address"
+                readOnly
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Wallet Address"
+                required
+              />
+
             <label htmlFor="name" className='font-semibold'>Name</label>
             <input
               type="text"

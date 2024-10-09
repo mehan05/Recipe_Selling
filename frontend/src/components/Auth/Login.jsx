@@ -31,7 +31,7 @@ const Login = () => {
         username,
         walletAddress
       })
-      console.log(response);
+      console.log("getting position from logn",response.user);
       if(response.status==200)
       {
         alert("Login Successful");
