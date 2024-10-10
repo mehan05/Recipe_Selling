@@ -7,8 +7,10 @@ import { ethers } from 'ethers';
 const RecipeDetails = () => {
   const { currentUser,setCurrentUser } = useContext(MyContext);
   const [currData, setCurData] = useState(null);
-  const[RecipeAmount,setRecipeAmount]  = useState(0);
+  const[username,setUsername]  = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const[buyToogle,setBuyToogle] = useState(false);
+  const[ButtonProductId,setButtonProductId] = useState("");
   const { id } = useParams();
   const[BuyerWalletAddress,setBuyerWalletAddress] = useState("");
   const[gettingChefAddressFromDB,setGettingChefAddressFromDB] = useState("");
@@ -27,6 +29,7 @@ const RecipeDetails = () => {
         const response = await api.get(`/image/${id}`);
         setCurData(response.data);
         setGettingChefAddressFromDB(response.data[0]?.chefAddress);     
+        setUsername(response.data[0]?.name);
       } catch (error) {
         console.log(error);
       }
@@ -35,9 +38,43 @@ const RecipeDetails = () => {
     fetchFunc(); 
   }, [id]);
 
+  useEffect(()=>{
+    const checking = async()=>{
+      await checkBought();
+
+    }
+    checking();
+  },[buyToogle])
+
   const handleEditToggle = () => {
     setIsEditing((prev) => !prev);
   };
+
+  const checkBought = async()=>{
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    try {
+      const signerAddress = await signer.getAddress();
+    const response = await axios.post("http://localhost:3000/checkBought",{
+      signer:signerAddress,
+      id
+   
+    });
+    if(response.status===200)
+    {
+      setBuyToogle(true)
+      setButtonProductId(response.data.id);
+    }
+    console.log("RecipeBought:",response.data);
+  } 
+  catch (error) {
+      console.log(error)
+      return;
+  }
+
+
+  }
 
   const handleChange = (field, value) => {
     setCurData((prevData) => {
@@ -78,6 +115,7 @@ const RecipeDetails = () => {
   
   const handleBuy = async () => {
     await fetchingUserAddress();
+    console.log(id);
     try {
       if (
         gettingChefAddressFromDB &&
@@ -85,10 +123,26 @@ const RecipeDetails = () => {
         currData &&
         currData[0]?.price
       ) {
+
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
   
         const amountInEther = ethers.parseEther(currData[0].price.toString());
+        try {
+            const signerAddress = await signer.getAddress();
+          const response = await axios.post("http://localhost:3000/buy",{
+            signer:signerAddress,
+            username,
+            id,
+            price:currData[0].price.toString()
+          });
+          console.log("RecipeBought:",response.data);
+        } 
+        catch (error) {
+            console.log(error)
+            return;
+        }
+
   
         alert('Please confirm the transaction in MetaMask');
   
@@ -98,7 +152,9 @@ const RecipeDetails = () => {
         });
   
         await tx.wait();
+   
         alert('Transaction Successful');
+        checkBought();
       } else {
         alert('Problem with the addresses or missing price');
       }
@@ -234,15 +290,16 @@ const RecipeDetails = () => {
                 <button 
                   className='mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg'
                   onClick={isEditing ? handleSave : handleEditToggle}
-                >
+                > 
                   {isEditing ? 'Save Changes' : 'Edit'}
                 </button>
                 ):(
                 <button 
-                  className='mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg'
+                  className={buyToogle && ButtonProductId===id?"mt-4 bg-green-500 text-white px-4 py-2 rounded-lg":"mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"}
                   onClick={handleBuy}
                 >
-                 Buy
+                  {buyToogle  && ButtonProductId===id?"Bought":"Buy"}
+                 
                 </button>
 
                 )

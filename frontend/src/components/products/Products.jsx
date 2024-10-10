@@ -3,7 +3,7 @@ import MyContext from '../context/ContextAPI';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Products = () => {
+const Products = ({ searchQuery }) => {
   const { RecipeDetails, setRecipeDetails } = useContext(MyContext);
   const navigate = useNavigate();
 
@@ -34,11 +34,16 @@ const Products = () => {
     fetchData();
   }, []);
 
+  // Filter recipes based on searchQuery
+  const filteredRecipes = RecipeDetails.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className='flex flex-col items-center'>
-      {RecipeDetails && RecipeDetails.length > 0 ? (
+      {filteredRecipes && filteredRecipes.length > 0 ? (
         <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full">
-          {RecipeDetails.map((item, index) => (
+          {filteredRecipes.map((item, index) => (
             <li key={index} onClick={() => setActiveCardFunc(item.id)} className="cursor-pointer">
               <a href="#" className="block overflow-hidden border-2 border-red-500 rounded-xl shadow-lg transition-shadow duration-200 hover:shadow-xl">
                 <img

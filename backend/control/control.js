@@ -1,7 +1,8 @@
-const { RecepieCreatingDataModel_1,UserModel_1 } = require("../models/model");
+const { RecepieCreatingDataModel_1,UserModel_1,UserBought_1 } = require("../models/model");
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+
 const mongoose = require('mongoose')
 
 const createMulter = () => {
@@ -219,5 +220,54 @@ console.log('Request params ID:', req.params.id);
     }
   }
 
+  const BoughtHandle = async(req,res)=>{
+      const {signer,username,id,price} = req.body;
+      let count = 0;
+      console.log(req.body)
+      try {
+        const recipe = await RecepieCreatingDataModel_1.findById(id);
+        if(!recipe)
+        {
+          return res.status(404).json({message:"recipe Not found"});
+        }
+        const existingPurchase = await UserBought_1.findOne({
+          address: signer,
+          recipeBought: id 
+        });
+    
+        if (existingPurchase) {
+          return res.status(400).json({ message: "User has already bought this recipe" });
+        }
 
-module.exports = { uploadImage, getImageById, getImage, createMulter,updateData ,registerUser,loginUser};
+        const adding = new UserBought_1({
+          id:id,
+          address:signer,
+          name:username,
+          recipeBought:[id]
+        });
+        await adding.save();
+
+        recipe.Bought = recipe.Bought?recipe.Bought+1: 1;
+        recipe.Income = recipe.Income? recipe.Income+Number(price):Number(price);
+
+        await recipe.save();
+
+
+        return res.status(200).json({message:"Recipe Bought Successfully",adding})
+      } catch (error) {
+        console.log(error);
+      }
+  }
+
+  const checkBought = async(req,res)=>{
+    const{signer,id} =req.body;
+    const checking= await UserBought_1.findOne({id: id});
+    if(checking)
+    {
+      return res.status(200).json({message:"success",id})
+    }
+    return res.status(201).json({message:"Failed"});
+  }
+
+
+module.exports = {BoughtHandle, uploadImage, getImageById, getImage, createMulter,updateData ,registerUser,loginUser,checkBought};

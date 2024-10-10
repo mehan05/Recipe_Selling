@@ -1,4 +1,23 @@
 const mongoose = require("mongoose");
+const UserBought = new mongoose.Schema({
+    id:{
+        type:String,
+        required:true
+    },
+    address:{
+        type:String,
+        required:true
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    recipeBought:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"CreatedDetails"
+    }]
+    
+})
 const UserModel  = new mongoose.Schema({
     name: {
         type: String,
@@ -64,4 +83,5 @@ const RecepieCreatingDataModel = new mongoose.Schema({
 })
 const RecepieCreatingDataModel_1 = mongoose.model('CreatedDetails',RecepieCreatingDataModel)
 const UserModel_1 = mongoose.model('User',UserModel)
-module.exports ={ RecepieCreatingDataModel_1,UserModel_1};
+const UserBought_1 = mongoose.model('UserBought',UserBought);
+module.exports ={ RecepieCreatingDataModel_1,UserModel_1,UserBought_1};
