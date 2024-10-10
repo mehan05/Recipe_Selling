@@ -247,8 +247,8 @@ console.log('Request params ID:', req.params.id);
         });
         await adding.save();
 
-        recipe.Bought = recipe.Bought?recipe.Bought+1: 1;
-        recipe.Income = recipe.Income? recipe.Income+Number(price):Number(price);
+        recipe.Bought = recipe.Bought?recipe.Bought+1: 0;
+        recipe.Income = recipe.Income? recipe.Income+Number(price):0;
 
         await recipe.save();
 
