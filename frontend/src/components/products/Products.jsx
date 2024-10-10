@@ -34,7 +34,6 @@ const Products = ({ searchQuery }) => {
     fetchData();
   }, []);
 
-  // Filter recipes based on searchQuery
   const filteredRecipes = RecipeDetails.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
