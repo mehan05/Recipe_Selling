@@ -41,5 +41,5 @@ Start by cloning the project repository:
     npm install
     npm start
 ``` 
-
+### 6. Now Click the link in your frontend terminal
  
