@@ -23,6 +23,21 @@ const createMulter = () => {
 
   return multer({ storage });
 };
+const getChefsRecipe = async(req,res)=>{
+  const {signer} = req.body;
+  
+  
+  if (!signer) {
+    return res.status(400).json({ message: "Signer address is required." });
+}
+  try { 
+    const recipe = await RecepieCreatingDataModel_1.find({chefAddress:signer.toLowerCase()});
+    console.log(recipe);
+    return res.status(200).json(recipe);
+  } catch (error) {
+    conosle.log(error);
+  }
+}
 const getUserBought = async (req, res) => {
   const { signer } = req.body;
 
@@ -301,4 +316,4 @@ console.log('Request params ID:', req.params.id);
   }
 
 
-module.exports = {BoughtHandle, uploadImage, getImageById, getImage, createMulter,updateData ,registerUser,loginUser,checkBought,getUserBought};
+module.exports = {BoughtHandle,getChefsRecipe, uploadImage, getImageById, getImage, createMulter,updateData ,registerUser,loginUser,checkBought,getUserBought};

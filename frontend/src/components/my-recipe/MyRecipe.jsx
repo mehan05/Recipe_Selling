@@ -18,6 +18,7 @@ const MyRecipe = () => {
             ? recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
             : false; 
     });
+
     const setActiveCardFunc = (id) => {
         navigate(`product/${id}`);
       };

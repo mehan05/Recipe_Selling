@@ -26,14 +26,14 @@ const Header = () => {
           <ul className="flex items-center gap-6 text-sm">
             <NavLink to={currentUser=="chef"?"chef/dashboard":"user/dashboard"}>
             <li className="text-black hover:underline hover:underline-offset-8  font-sem  ibold text-lg  transition hover:decoration-[red]" >
-               DashBoard 
+               Home
             </li>
             </NavLink>
             {currentUser=='chef'&&
 
-            <NavLink to="chef/add-recipe">
+            <NavLink to="chef/dashboard_2">
             <li className="text-black hover:underline hover:underline-offset-8  font-semibold text-lg  transition hover:decoration-[red]" >
-               Add-Recipe 
+               DashBoard
             </li>
             </NavLink>
             }

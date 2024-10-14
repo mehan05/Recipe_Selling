@@ -11,6 +11,7 @@ import Register from './components/Auth/Register'
 import { useContext } from 'react'
 import MyContext from './components/context/ContextAPI'
 import MyRecipe from './components/my-recipe/MyRecipe'
+import ChefDashboard from './components/chefDashBoard/ChefDashboard'
 
 function App() {
     const {currentUser,setCurrentUser} = useContext(MyContext);
@@ -29,7 +30,9 @@ function App() {
                 
                   <Route path='chef/dashboard' element={<Dashboard/>} />
                   <Route path="chef/dashboard/product/:id" element={<RecipeDetails />} />
-                  <Route path='chef/add-recipe' element={<AddRecepie/>} />
+                  <Route path="chef/dashboard_2/product/:id" element={<RecipeDetails />} />
+                  <Route path='chef/dashboard_2' element={<ChefDashboard/>} />
+                  <Route path='chef/dashboard_2/add-recipe' element={<AddRecepie/>} />
                 </>
             ):(
               <>
