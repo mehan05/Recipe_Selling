@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { uploadImage,checkBought, getImageById, BoughtHandle,getImage, createMulter,updateData,loginUser,registerUser } = require("../control/control");
+const { uploadImage,checkBought, getUserBought,getImageById, BoughtHandle,getImage, createMulter,updateData,loginUser,registerUser } = require("../control/control");
 
 const upload = createMulter();
 
@@ -13,5 +13,7 @@ router
   .post('/login',loginUser)
   .post("/buy",BoughtHandle)
   .post("/checkBought",checkBought)
+  .post("/my-recipe",getUserBought);
+  
 
 module.exports = router;

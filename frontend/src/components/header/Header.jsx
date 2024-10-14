@@ -37,6 +37,14 @@ const Header = () => {
             </li>
             </NavLink>
             }
+            {currentUser=='user'&&
+
+            <NavLink to="/user/my-recipe">
+            <li className="text-black hover:underline hover:underline-offset-8  font-semibold text-lg  transition hover:decoration-[red]" >
+               My-Recipe 
+            </li>
+            </NavLink>
+            }
 
             {/* <li>
               <a className="text-black font-semibold text-lg    hover:underline hover:underline-offset-8  transition hover:decoration-[red] " href="#"> Add Recepie </a>

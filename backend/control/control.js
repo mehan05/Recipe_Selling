@@ -23,6 +23,35 @@ const createMulter = () => {
 
   return multer({ storage });
 };
+const getUserBought = async (req, res) => {
+  const { signer } = req.body;
+
+  if (!signer) {
+      return res.status(400).json({ message: "Signer address is required." });
+  }
+
+  console.log("Signer from getUserBought:", signer);
+
+  try {
+      console.log("Checking correct", signer);
+
+ 
+      let userBought = await UserBought_1.findOne({ address: signer }).populate('recipeBought').exec();
+
+      if (!userBought) {
+          console.log("No data found for signer:", signer);
+          return res.status(404).json({ message: "No Data found for this address" });
+      }
+
+      console.log("Before populate:", userBought);
+
+      res.status(200).json(userBought);
+
+  } catch (error) {
+      console.error("Error while fetching userBought:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 const registerUser = async (req, res) => {
   const { walletAddress, username, position } = req.body;
@@ -183,6 +212,8 @@ const getImageById = async (req, res) => {
         name: image.name,
         chefAddress:image.chefAddress,
         recepie: image.recepie,
+        description: image.description,
+        typeOfDish: image.typeOfDish,
         allergents: image.allergents,
         Bought: image.Bought,
         Income: image.Income
@@ -270,4 +301,4 @@ console.log('Request params ID:', req.params.id);
   }
 
 
-module.exports = {BoughtHandle, uploadImage, getImageById, getImage, createMulter,updateData ,registerUser,loginUser,checkBought};
+module.exports = {BoughtHandle, uploadImage, getImageById, getImage, createMulter,updateData ,registerUser,loginUser,checkBought,getUserBought};

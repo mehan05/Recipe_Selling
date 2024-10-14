@@ -66,6 +66,11 @@ const RecipeDetails = () => {
       setBuyToogle(true)
       setButtonProductId(response.data.id);
     }
+    else
+    {
+      setBuyToogle(false)
+      setButtonProductId("");
+    }
     console.log("RecipeBought:",response.data);
   } 
   catch (error) {
@@ -209,6 +214,19 @@ const RecipeDetails = () => {
                   )}
                 </p>
                 <p className='text-lg text-gray-700 mt-2'>
+                  Dish Type: 
+                  {isEditing ? (
+                    <input 
+                      type="number"
+                      value={currData[0].typeOfDish}
+                      onChange={(e) => handleChange('price', e.target.value)}
+                      className='ml-2 border border-gray-300 rounded-lg p-1'
+                    />
+                  ) : (
+                    currData[0].typeOfDish
+                  )}
+                </p>
+                <p className='text-lg text-gray-700 mt-2'>
                  Chef Address: {currData[0].chefAddress}      
                 </p>  
 
@@ -225,7 +243,7 @@ const RecipeDetails = () => {
                   />
                 </div>
                 <div className='mb-4'>
-                {currentUser==='chef'&&
+                {(currentUser==='chef' ||  ButtonProductId==id)&&
                   <>
                   
                   <h3 className='font-semibold text-lg text-gray-900'>

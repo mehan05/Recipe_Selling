@@ -12,10 +12,12 @@ const UserBought = new mongoose.Schema({
         type: String,
         required: true,
     },
-    recipeBought:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"CreatedDetails"
+
+    recipeBought: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CreatedDetails"
     }]
+    
     
 })
 const UserModel  = new mongoose.Schema({
