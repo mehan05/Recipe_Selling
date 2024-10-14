@@ -23,11 +23,11 @@ Start by cloning the project repository:
 
 ### 2. Paste the mongo db connection string in file present inside /backend/.env
 ### 3. Split the terminal 
-  ## In one locate to backend by typing
+  #### In one locate to backend by typing
   ```bash
         cd backend
   ```
-  ## In Another locate to frontend by typing
+  #### In Another locate to frontend by typing
   ```bash
         cd frontend
   ```
