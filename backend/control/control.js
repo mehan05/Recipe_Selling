@@ -292,9 +292,9 @@ console.log('Request params ID:', req.params.id);
           recipeBought:[id]
         });
         await adding.save();
+        recipe.Bought = (recipe.Bought || 0) + 1;
 
-        recipe.Bought = recipe.Bought?recipe.Bought+1: 0;
-        recipe.Income = recipe.Income? recipe.Income+Number(price):0;
+        recipe.Income = (recipe.Income || 0) + Number(price);
 
         await recipe.save();
 
