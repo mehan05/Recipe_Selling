@@ -63,7 +63,6 @@ const AddRecepie = () => {
     formData.append("recipe", recipe);
     formData.append("dishType", dishType);
     formData.append("allergents", JSON.stringify(allergents));
-
     const api = axios.create({
       baseURL: "https://recipe-sell.onrender.com",
       headers: {
